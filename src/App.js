@@ -13,7 +13,9 @@ const products = [
   ];
 
 function App() {
+
   const [search, setSearch] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('');
   const [inStockOnly, setInStockOnly] =useState(false);
 
   const handleChange = (e) => {
@@ -21,16 +23,38 @@ function App() {
   };
   const toggleInStock = (e) =>{
     setInStockOnly(e.target.checked);
-  }
+  };
+
+  const selectCategory = (e) => {
+    setSelectedCategory(e.target.value);
+  };
+
+  const filteredProducts = products.filter((product) => {
+    if(selectedCategory===""){
+      return true;
+    }
+    return product.category === selectedCategory;
+  }).filter((product) => {
+    return product.name.includes(search);
+  })
 
   return (
     <div className='app'>
       <input placeholder='Search ...' onChange={handleChange} value={search}></input>
-      <div>
-        <input type='checkbox' onChange={toggleInStock} checked={inStockOnly} id='checkbox'></input>
-        <label htmlFor='checkbox'>Show only products in stock</label>
+      <div className='flex justify-between'>
+        <div>
+          <input type='checkbox' onChange={toggleInStock} checked={inStockOnly} id='checkbox'></input>
+          <label htmlFor='checkbox'>Show only products in stock</label>
+        </div>
+        <div>
+          <select value={selectedCategory} onChange={selectCategory}>
+            <option value=''>All</option>
+            <option value='Fruits'>Fruits</option>
+            <option value='Vegetables'>Vegetables</option>
+          </select>
+        </div>
       </div>
-      <ProductsTable category='Fruits' products={products} />
+      <ProductsTable category={selectedCategory} products={filteredProducts} />
     </div>
   );
 }
