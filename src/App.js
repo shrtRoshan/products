@@ -35,7 +35,12 @@ function App() {
     }
     return product.category === selectedCategory;
   }).filter((product) => {
-    return product.name.includes(search);
+    return product.name.toLowerCase().includes(search.toLowerCase());
+  }).filter((product) => {
+    if (inStockOnly) {
+      return product.stocked;
+    }
+    return true;
   })
 
   return (
